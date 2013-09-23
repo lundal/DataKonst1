@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -28,6 +29,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- any Xilinx primitives in this code.
 --library UNISIM;
 --use UNISIM.VComponents.all;
+
+library WORK;
+use WORK.MIPS_CONSTANT_PKG.ALL;
 
 entity processor is
 	generic(
@@ -46,27 +50,6 @@ entity processor is
 		dmem_data_out		:	out	STD_LOGIC_VECTOR (MEM_DATA_BUS-1 downto 0);
 		dmem_write_enable	:	out	STD_LOGIC
 	);
-	
-	-- States
-	constant STATE_FETCH	:	STD_LOGIC_VECTOR(1 downto 0) := "01";
-	constant STATE_EXECUTE	:	STD_LOGIC_VECTOR(1 downto 0) := "10";
-	constant STATE_STALL	:	STD_LOGIC_VECTOR(1 downto 0) := "11";
-	
-	-- Opcodes
-	constant OP_RRR		:	STD_LOGIC_VECTOR(5 downto 0) := "000000";
-	constant OP_LW		:	STD_LOGIC_VECTOR(5 downto 0) := "100011";
-	constant OP_SW		:	STD_LOGIC_VECTOR(5 downto 0) := "101011";
-	constant OP_LUI		:	STD_LOGIC_VECTOR(5 downto 0) := "001111";
-	constant OP_J		:	STD_LOGIC_VECTOR(5 downto 0) := "000010";
-	constant OP_BEQ		:	STD_LOGIC_VECTOR(5 downto 0) := "000100";
-	
-	-- Functions
-	constant FUNC_ADD	:	STD_LOGIC_VECTOR(5 downto 0) := "100000";
-	constant FUNC_SUB	:	STD_LOGIC_VECTOR(5 downto 0) := "100010";
-	constant FUNC_AND	:	STD_LOGIC_VECTOR(5 downto 0) := "100100";
-	constant FUNC_OR	:	STD_LOGIC_VECTOR(5 downto 0) := "100101";
-	constant FUNC_SLT	:	STD_LOGIC_VECTOR(5 downto 0) := "101010";
-	
 end processor;
 
 architecture Behavioral of processor is
@@ -96,10 +79,6 @@ architecture Behavioral of processor is
 		);
 	end component;
 	
-	-- Fun signals
-	signal state 		:	STD_LOGIC_VECTOR(1 downto 0);
-	signal state_new	:	STD_LOGIC_VECTOR(1 downto 0);
-	
 	-- Instruction signals
 	signal pc 			:	STD_LOGIC_VECTOR(31 downto 0);
 	signal instruction	:	STD_LOGIC_VECTOR(31 downto 0);
@@ -107,13 +86,15 @@ architecture Behavioral of processor is
 	signal rs			:	STD_LOGIC_VECTOR(4 downto 0);
 	signal rt			:	STD_LOGIC_VECTOR(4 downto 0);
 	signal rd			:	STD_LOGIC_VECTOR(4 downto 0);
-	signal shift		:	STD_LOGIC_VECTOR(5 downto 0);
+	signal shift		:	STD_LOGIC_VECTOR(4 downto 0);
 	signal func			:	STD_LOGIC_VECTOR(5 downto 0);
 	signal immedi		:	STD_LOGIC_VECTOR(15 downto 0);
 	signal target		:	STD_LOGIC_VECTOR(25 downto 0);
+	signal immedi_ext	:	STD_LOGIC_VECTOR(31 downto 0);
+	signal target_ext	:	STD_LOGIC_VECTOR(31 downto 0);
 	
 	-- Register signals			
-	signal reg_rw			:	STD_LOGIC;				
+	signal reg_rw			:	STD_LOGIC;
 	signal reg_rs_addr 		:	STD_LOGIC_VECTOR (RADDR_BUS-1 downto 0);
 	signal reg_rt_addr 		:	STD_LOGIC_VECTOR (RADDR_BUS-1 downto 0);
 	signal reg_rd_addr 		:	STD_LOGIC_VECTOR (RADDR_BUS-1 downto 0);
@@ -127,6 +108,18 @@ architecture Behavioral of processor is
 	signal alu_in		:	ALU_INPUT;
 	signal alu_r		:	STD_LOGIC_VECTOR(DDATA_BUS-1 downto 0);
 	signal alu_flags	:	ALU_FLAGS;
+	
+	-- Control signals
+	signal state 		:	STD_LOGIC_VECTOR(1 downto 0);
+
+	signal alu_src		:	STD_LOGIC;
+	signal mem_write	:	STD_LOGIC;
+	signal mem_to_reg	:	STD_LOGIC;
+	signal reg_write	:	STD_LOGIC;
+	signal reg_dst		:	STD_LOGIC;
+	signal branch		:	STD_LOGIC;
+	signal jump			:	STD_LOGIC;
+
 begin
 
 	REG_FILE: register_file
@@ -142,7 +135,7 @@ begin
 		RT				=> reg_rt
 	);
 	
-	ALU: alu
+	ALU_1: alu
 	generic map (N=>DDATA_BUS)
 	port map(
 		X			=> alu_x,
@@ -152,84 +145,176 @@ begin
 		FLAGS		=> alu_flags
 	);
 
-	PROC : process (clk, reset, state_new)
+	CONTROL : process (clk, reset)
+		constant STATE_FETCH	:	STD_LOGIC_VECTOR(1 downto 0) := "01";
+		constant STATE_EXECUTE	:	STD_LOGIC_VECTOR(1 downto 0) := "10";
+		constant STATE_STALL	:	STD_LOGIC_VECTOR(1 downto 0) := "11";
 	begin
 		if rising_edge(clk) then
 			-- Reset
 			if reset = '1' then
-				state_new <= STATE_FETCH;
+				state <= STATE_FETCH;
 				pc <= ZERO32b;
+			elsif processor_enable = '0' then
+				-- NA
+			else
+				-- Default advancement of PC
+				--pc <= pc + 4;
 				
-			-- Fetch state
-			elsif state = STATE_FETCH then
-				
-				instruction <= imem_data_in;
-				
-				-- Next: Execute!
-				state_new <= STATE_EXECUTE;
-				
-			-- Execute state
-			elsif state = STATE_EXECUTE then
-				
-				-- Split!
-				opcode	<=	instruction(31 downto 26);
-				rs		<=	instruction(25 downto 21);
-				rt		<=	instruction(20 downto 16);
-				rd		<=	instruction(15 downto 11);
-				shift	<=	instruction(10 downto 6);
-				func	<=	instruction(5 downto 0);
-				immedi	<=	instruction(15 downto 0);
-				target	<=	instruction(25 downto 0);
-				
-				
-				-- Decode!
-				case opcode is
-					when OP_RRR =>
-						-- Set up lines
-						reg_rs_addr <= rs;
-						reg_rt_addr <= rt;
-						reg_rd_addr <= rd;
+				case state is
+					-- Fetch
+					when STATE_FETCH =>
+						-- Next: Execute!
+						state <= STATE_EXECUTE;
 						
-						alu_x <= reg_rs;
-						alu_y <= reg_rt;
+						-- Get instruction
+						instruction <= imem_data_in;
 						
-						reg_write_data <= alu_r;
-						reg_rw <= '1';
+						-- Control signals (Are theese needed?)
+--						alu_src		<= '0';
+--						mem_write	<= '0';
+--						mem_to_reg	<= '0';
+--						reg_write	<= '0';
+--						reg_dst		<= '0';
+--						branch		<= '0';
+--						jump		<= '0';
+					
+					-- Execute
+					when STATE_EXECUTE =>
+						-- Next: Fetch!
+						state <= STATE_FETCH;
 						
-						-- Set alu function
-						case func is
+						case opcode is
+							-- Tripple register operation
+							when OP_RRR =>
+								-- Control signals
+								alu_src		<= '0';
+								mem_write	<= '0';
+								mem_to_reg	<= '0';
+								reg_write	<= '1';
+								reg_dst		<= '1';
+								branch		<= '0';
+								jump		<= '0';
+								
+								-- ALU function
+								case func is
+									when FUNC_ADD =>
+										alu_in.Op3	<=	'0';
+										alu_in.Op2	<=	'0';
+										alu_in.Op1	<=	'1';
+										alu_in.Op0	<=	'0';
+									when FUNC_SUB =>
+										alu_in.Op3	<= '0';
+										alu_in.Op2	<= '1';
+										alu_in.Op1	<= '1';
+										alu_in.Op0	<= '0';
+									when FUNC_AND =>
+										alu_in.Op3	<=	'0';
+										alu_in.Op2	<=	'0';
+										alu_in.Op1	<=	'0';
+										alu_in.Op0	<=	'0';
+									when FUNC_OR =>
+										alu_in.Op3	<=	'0';
+										alu_in.Op2	<=	'0';
+										alu_in.Op1	<=	'0';
+										alu_in.Op0	<=	'1';
+									when FUNC_SLT =>
+										alu_in.Op3	<=	'0';
+										alu_in.Op2	<=	'0';
+										alu_in.Op1	<=	'1';
+										alu_in.Op0	<=	'1';
+									when others =>
+										null;
+								end case;
+							
+							-- Load word ($t = MEM[$s + offset])
+							when OP_LW =>
+								-- Control signals
+								alu_src		<= '1';
+								mem_write	<= '0';
+								mem_to_reg	<= '1';
+								reg_write	<= '1';
+								reg_dst		<= '0';
+								branch		<= '0';
+								jump		<= '0';
+								
+								-- ALU function: Add
+								alu_in.Op3	<=	'0';
+								alu_in.Op2	<=	'0';
+								alu_in.Op1	<=	'1';
+								alu_in.Op0	<=	'0';
+								
+								-- This one is a bit slow
+								state <= STATE_STALL;
+							
+							-- Store word (MEM[$s + offset] = $t)
+							when OP_SW =>
+								-- Control signals
+								alu_src		<= '1';
+								mem_write	<= '1';
+								mem_to_reg	<= '0';
+								reg_write	<= '0';
+								reg_dst		<= '0';
+								branch		<= '0';
+								jump		<= '0';
+								
+								-- ALU function: Add
+								alu_in.Op3	<=	'0';
+								alu_in.Op2	<=	'0';
+								alu_in.Op1	<=	'1';
+								alu_in.Op0	<=	'0';
+							
 							when others =>
 								null;
 						end case;
+					
+					-- Stall (To give memory some slack)
+					when STATE_STALL =>
+						-- Next: Fetch!
+						state <= STATE_FETCH;
 						
+					-- Something went wrong!
 					when others =>
-						null;
+						-- SKY NET RISES!
+						state <= STATE_FETCH;
 				end case;
 				
-				-- Compute
-				
-				-- if memory then
-				-- Next: Stall!
-				-- state <= STATE_STALL;
-				-- else
-				-- Next: Fetch!
-				state_new <= STATE_FETCH;
-				-- end if;
-				
-			-- Stall state (To give memory some slack)
-			elsif state = STATE_STALL then
-				-- Next: Fetch!
-				state_new <= STATE_FETCH;
-				
-			-- Something went wrong!
-			else
-				-- SKY NET RISES!
 			end if;
-			
-			-- Go to next state
-			state <= state_new;
 		end if;
-	end process PROC;
+	end process;
+	
+	-- Split instruction
+	opcode	<= instruction(31 downto 26);
+	rs		<= instruction(25 downto 21);
+	rt		<= instruction(20 downto 16);
+	rd		<= instruction(15 downto 11);
+	shift	<= instruction(10 downto 6);
+	func	<= instruction(5 downto 0);
+	immedi	<= instruction(15 downto 0);
+	target	<= instruction(25 downto 0);
+	
+	-- Register File Inputs
+	reg_rs_addr		<= rs;
+	reg_rt_addr		<= rt;
+	reg_rd_addr		<= rd when reg_dst = '1' else rt; -- RegDst Mux
+	reg_write_data	<= dmem_data_in when mem_to_reg = '1' else alu_r; -- MemToReg Mux
+	reg_rw			<= reg_write;
+	
+	-- ALU Inputs (TODO: FUNC)
+	alu_x	<= reg_rs;
+	alu_y	<= immedi_ext when alu_src = '1' else reg_rt; -- ALUSrc Mux
+	
+	-- Data Memory Inputs
+	dmem_address		<= alu_r;
+	dmem_address_wr		<= alu_r;
+	dmem_write_enable	<= mem_write;
+	dmem_data_out		<= reg_rt;
+	
+	-- Immediate Sign Extension
+	immedi_ext <= ZERO16b & immedi when immedi(15) = '0' else ONE16b & immedi;
+	
+	-- Target Concatenation
+	target_ext <= pc(31 downto 28) & target & "00";
 	
 end Behavioral;
 

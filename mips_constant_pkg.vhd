@@ -8,7 +8,23 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
 package MIPS_CONSTANT_PKG is
-
+	
+	-- Opcodes
+	constant OP_RRR		:	STD_LOGIC_VECTOR(5 downto 0) := "000000";
+	constant OP_LW		:	STD_LOGIC_VECTOR(5 downto 0) := "100011";
+	constant OP_SW		:	STD_LOGIC_VECTOR(5 downto 0) := "101011";
+	constant OP_LUI		:	STD_LOGIC_VECTOR(5 downto 0) := "001111";
+	constant OP_J		:	STD_LOGIC_VECTOR(5 downto 0) := "000010";
+	constant OP_BEQ		:	STD_LOGIC_VECTOR(5 downto 0) := "000100";
+	
+	-- Functions
+	constant FUNC_ADD	:	STD_LOGIC_VECTOR(5 downto 0) := "100000";
+	constant FUNC_SUB	:	STD_LOGIC_VECTOR(5 downto 0) := "100010";
+	constant FUNC_AND	:	STD_LOGIC_VECTOR(5 downto 0) := "100100";
+	constant FUNC_OR	:	STD_LOGIC_VECTOR(5 downto 0) := "100101";
+	constant FUNC_SLT	:	STD_LOGIC_VECTOR(5 downto 0) := "101010";
+	
+	
 	-- CONSTANTS
 	constant IADDR_BUS	: integer	:= 32;
 	constant IDATA_BUS	: integer	:= 32;
