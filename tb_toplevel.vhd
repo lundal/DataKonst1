@@ -86,22 +86,22 @@ ARCHITECTURE behavior OF tb_toplevel IS
   
   -- These are the instructions executed by the CPU (loaded to instruction-memory)
   -- See ins.txt for what they actually mean (that is a file used when loading them to the FPGA)
-  constant ins0  : std_logic_vector(0 to 31) := X"8C010001";
-  constant ins1  : std_logic_vector(0 to 31) := X"8C020002";
-  constant ins2  : std_logic_vector(0 to 31) := X"8C020002";
-  constant ins3  : std_logic_vector(0 to 31) := X"00221820";
-  constant ins4  : std_logic_vector(0 to 31) := X"AC030005";
-  constant ins5  : std_logic_vector(0 to 31) := X"10000002";
-  constant ins6  : std_logic_vector(0 to 31) := X"AC030003";
-  constant ins7  : std_logic_vector(0 to 31) := X"AC030004";
-  constant ins8  : std_logic_vector(0 to 31) := X"AC030006";
-  constant ins9  : std_logic_vector(0 to 31) := X"AC030007";
-  constant ins10 : std_logic_vector(0 to 31) := X"3C030006";
-  constant ins11 : std_logic_vector(0 to 31) := X"AC030008";
-  constant ins12 : std_logic_vector(0 to 31) := X"00231820";
-  constant ins13 : std_logic_vector(0 to 31) := X"AC030009";
-  constant ins14 : std_logic_vector(0 to 31) := X"1000FFFD";
-  constant ins15 : std_logic_vector(0 to 31) := X"AC03000A";
+  constant ins0  : std_logic_vector(0 to 31) := X"8C010001"; -- OP_LW  & "00000" & "00001" & "0000000000000001"; -- lw r1, 1(r0)
+  constant ins1  : std_logic_vector(0 to 31) := X"8C020002"; -- OP_LW  & "00000" & "00010" & "0000000000000010"; -- lw r1, 2(r0)
+  constant ins2  : std_logic_vector(0 to 31) := X"8C020002"; -- OP_LW  & "00000" & "00010" & "0000000000000010"; -- lw r1, 2(r0)
+  constant ins3  : std_logic_vector(0 to 31) := X"00221820"; -- OP_RRR & "00001" & "00010" & "00011" & "00000" & FUNC_ADD; -- add r3, r1, r2
+  constant ins4  : std_logic_vector(0 to 31) := X"AC030005"; -- OP_SW  & "00000" & "00011" & "0000000000000101"; -- sw r3, 5(r0)
+  constant ins5  : std_logic_vector(0 to 31) := X"10000002"; -- OP_BEQ & "00000" & "00000" & "0000000000000010"; -- beq r0, r0, 2
+  constant ins6  : std_logic_vector(0 to 31) := X"AC030003"; -- OP_SW  & "00000" & "00011" & "0000000000000011"; -- sw r3, 3(r0)
+  constant ins7  : std_logic_vector(0 to 31) := X"AC030004"; -- OP_SW  & "00000" & "00011" & "0000000000000011"; -- sw r3, 4(r0)
+  constant ins8  : std_logic_vector(0 to 31) := X"AC030006"; -- OP_SW  & "00000" & "00011" & "0000000000000110"; -- sw r3, 6(r0)
+  constant ins9  : std_logic_vector(0 to 31) := X"AC030007"; -- OP_SW  & "00000" & "00011" & "0000000000000111"; -- sw r3, 7(r0)
+  constant ins10 : std_logic_vector(0 to 31) := X"3C030006"; -- OP_LUI & "00000" & "00011" & "0000000000000110"; -- lui r3, 6
+  constant ins11 : std_logic_vector(0 to 31) := X"AC030008"; -- OP_SW  & "00000" & "00011" & "0000000000001000"; -- sw r3, 8(r0)
+  constant ins12 : std_logic_vector(0 to 31) := X"00231820"; -- OP_RRR & "00001" & "00011" & "00011" & "00000 & FUNC_ADD; -- add, r3, r1, r3
+  constant ins13 : std_logic_vector(0 to 31) := X"AC030009"; -- OP_SW  & "00000" & "00011" & "0000000000001001"; -- sw r3, 9(r0)
+  constant ins14 : std_logic_vector(0 to 31) := X"1000FFFD"; -- OP_BEQ & "00000" & "00000" & "1111111111111101"; -- beq r0, r0, -3
+  constant ins15 : std_logic_vector(0 to 31) := X"AC03000A"; -- OP_SW  & "00000" & "00011" & "0000000000001010"; -- sw r3, 10(r0)
    
   -- Used to control the COM-module
   constant CMD_IDLE	: std_logic_vector(0 to 31) := "00000000000000000000000000000000";
