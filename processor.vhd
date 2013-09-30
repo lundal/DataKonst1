@@ -264,6 +264,22 @@ begin
 								alu_in.Op1	<=	'1';
 								alu_in.Op0	<=	'0';
 							
+							when OP_LUI =>
+								-- Control signals
+								alu_src		<= '1';
+								mem_write	<= '0';
+								mem_to_reg	<= '0';
+								reg_write	<= '1';
+								reg_dst		<= '0';
+								branch		<= '0';
+								jump		<= '0';
+								
+								-- ALU function: Shift 16
+								alu_in.Op3	<=	'1';
+								alu_in.Op2	<=	'0';
+								alu_in.Op1	<=	'0';
+								alu_in.Op0	<=	'0';
+							
 							when others =>
 								null;
 						end case;
