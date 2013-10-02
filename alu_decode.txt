@@ -1,0 +1,12 @@
+ALU
+	3 => Res = Y << 16
+	2 => Y_new = neg Y
+	10 ==> ALU_1BIT
+
+ALU_1BIT
+	10
+	00 : X and Y
+	01 : X or Y
+	10 : X + Y
+	11 : (X + Y) < 0
+
