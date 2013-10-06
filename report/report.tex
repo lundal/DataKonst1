@@ -1,0 +1,127 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage[pdftex]{graphicx}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{color}
+\usepackage{underscore}
+\usepackage{url}
+
+  \usepackage{courier}
+
+% from http://stackoverflow.com/questions/741985/latex-source-code-listing-like-in-professional-books
+ \lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+            frame=b,         
+%        keywordstyle=[1]\textbf,    % Stil der Keywords
+%        keywordstyle=[2]\textbf,    %
+%        keywordstyle=[3]\textbf,    %
+%        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{white}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+%         showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+ }
+
+\DeclareCaptionFont{white}{ \color{white} }
+\DeclareCaptionFormat{listing}{
+  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
+    \parbox{\textwidth}{\hspace{15pt}#1#2#3}
+  }
+}
+\captionsetup[lstlisting]{ format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
+
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2953}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{Created=Monday, January 30, 2012 17:20:46}
+%TCIDATA{LastRevised=Monday, February 27, 2012 12:06:08}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Standard LaTeX\Blank - Standard LaTeX Article">}
+%TCIDATA{CSTFile=40 LaTeX article.cst}
+
+\newenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+
+% Sets page margins to 1", which is standard
+\geometry{left=1in,right=1in,top=1in,bottom=1in} 
+
+% allows the included extensions of graphic files
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+% sets/adds graphic path. If empty it just looks around the folder the .tex file is in
+\graphicspath{{}}
+
+% I do not remember what this does
+\setlength{\headheight}{15.2pt}
+
+% allows the xhead parameters
+\pagestyle{fancy}
+
+% Sets the left header
+\lhead{Group Awesome}
+
+% Sets the right header
+\rhead{Exercise 1, TDT4255 Autumn 2013}
+
+% everything before this is considered the header or whatever.
+\begin{document}
+
+% INCLUDEGRAPHICS EXPLANATION
+% \includegraphics[scale=1]{name of file}
+% sometimes you want to twice encase the filename in squiggly brackets. I do not know why but sometimes it is required.
+
+% begin title page, use \\ for newline
+\title{Report from exercise \#1\\TDT4255 Computer Design}
+
+% now one can list the authors, \textbf{} makes bold text
+\author{Emil Taylor Bye \and Péter Henrik Gombos \and Per Thomas Lundal}
+
+
+\pagenumbering{roman}
+
+% make title page
+\maketitle
+
+
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+
+\part*{Abstract}
+
+\input{abstract/abstract.tex}
+
+\newpage
+
+\tableofcontents
+
+\setcounter{secnumdepth}{3}
+
+\newpage
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\part{Introduction}
+
+\input{introduction/introduction.tex}
+
+\newpage
+
+\end{document}
