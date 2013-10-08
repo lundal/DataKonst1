@@ -6,6 +6,10 @@ While no more instructions than those required were implemented in the processor
 
 It was suggested to use a stall state for both load and store instructions, but we found that stalls were unnecessary for store instructions, as storing data to the memory only takes one clock cycle, opposed to retrieving data and then writing to registries, which takes two.
 
+\section{Modules}
+
+We realize that several processes and signal assignments in \emph{processor.vhd} could be forked out into their own components, but we did not do this due to VHDL's extremely verbose typing.
+
 \section{Problems}
 
 \subsection{Program Counter}
