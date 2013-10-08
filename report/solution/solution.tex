@@ -26,11 +26,9 @@ The processor implements all required instructions, as shown below:
     \caption{\label{fig:cpuArchitecture}The implemented CPU architecture.} 
 \end{figure}
 
-The CPU architecture closely resembles the suggested one.  The main difference
-is that instead of feeding the program counter register into the instruction
-memory, \cite{lab-compendium}, page 115.
-The counter is fed into it, and then a flip-flop lets the instruction through at the
-correct time.
+The CPU architecture closely resembles the suggested one \cite[p.115]{lab-compendium}.
+The main difference is that instead of feeding the program counter register into the instruction memory, 
+the calculated next program counter is fed into it, and then a flip-flop lets the instruction through at the correct time.
 
 \section{The Control Unit}
 \begin{figure}[ht]
@@ -40,7 +38,7 @@ correct time.
 \end{figure}
 
 The control unit (CU) was implemented as a state machine, a decoder and a
-splitter.  On a rising clock edge, it will update the state depending on the
+splitter. On a rising clock edge, it will update the state depending on the
 current state. The states, as shown in \ref{fig:stateMachine}, are as follows:
 
 \subsection{Fetch}
