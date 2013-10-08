@@ -13,7 +13,11 @@ It was suggested to use a stall state for both load and store instructions, but 
 The program counter has to be updated before the Fetch state in the suggested design. We tried to update it during the Execute state, but this caused some trouble for load instructions, as the destination register would be changed to that of the next instruction. We therefore decided to add a flip-flop after the instruction memory to control its output. However, this also meant that we had to move the register for the program counter, otherwise it would require two clock cycles to fetch the instruction.
 
 \subsection{Loading the design on to the FPGA}
+\label{subsec:uploadproblems}
 
-As we were about to test our design on the FPGA, some problems arised. We were
-unable to generate a functional .bit file, as whenever we tried to upload it to
-the FPGA, 
+After successfully generating the programming file, we went on to upload the processor to the FPGA.
+AvProg managed to connect to the FPGA board, and upload seemed to going well, it went as far as saying so only to give an error message a second later: \textbf{No ACK from state 12}.
+The problem persisted even after increasing AvProg's timeout (as suggested by \cite{avnet-programming-user-manual}, page 40).
+
+It seemed like we were able to connect to the FPGA with host.py and send commands, but we never got any response so we have no idea whether we actually managed to connect.
+As the deadline approached at a second every second and we did not manage to come any closer to uploading, we decided it was a better use of our time to improve on what we actually could improve.
