@@ -94,3 +94,6 @@ transcript
 *.out
 *.synctex.gz
 *.pdf
+
+# Vim
+*.swp
