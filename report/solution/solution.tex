@@ -1,22 +1,7 @@
 \section{Instruction Set}
 
-The processor implements all required instructions, as shown below:
-
-\begin{itemize}
-    \item Several ALU instructions (All working on two registers and storing the result in a third):
-        \begin{itemize}
-            \item ADD - Addition
-            \item SUB - Subtraction
-            \item SLT - Test if the first source register is less than second
-            \item AND - Bitwise and
-            \item OR  - Logical or
-        \end{itemize}
-    \item BEQ - branch if registers are equal
-    \item LW - Load word from memory
-    \item SW - Store word to memory
-    \item LUI - Store immediate value shifted left 16 bits in a register
-    \item J - Jump
-\end{itemize}
+The processer we made implemented instruction set described in section \ref{sec:instructionset}.
+We had the opportunity to expand the instruction set, but we did not see any reason to do so as the limited instruction set made testing easier.
 
 \section{Architecture}
 
