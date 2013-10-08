@@ -47,6 +47,15 @@ INFILOOP:
 J INFILOOP     ; Keep on spinning, a simple jump test
 \end{verbatim}
 
+\section{Synthesis}
+While synthesizing the processor, we managed to reach a frequency of 39.134MHz.
+It is very likely that a higher frequency can be achieved, but we are satisfied with the frequency achieved, as it seems like we are in the right order of magnitude when it comes to what is expected.
+
+\subsection{Resource utilization}
+We did not expect to hit any limits when it comes to resources as the FPGA is quite large and the CPU rather simple, however it always pays off to keep a watch of the resource utilization nevertheless.
+Slice register and slice LUT usage was quite low at 1\% and 3\% respectively.
+The total percentage of used slices came in at 5\%.
+
 \section{Simulation}
 \subsection{Supplied test program}
 The execution of the first three instructions can be seen in figure \ref{fig:sim1}. As expected, these load word instructions makes use an extra stall cycle. The figure shows that data is loaded correctly from memory into the \emph{reg_write_data} signal, and that the register file is updated at the following clock cycle. Note that the register contents is too big to display in the figure, but the data is stored correctly. Since instruction 2 is indentical to instruction 1, nothing happens except for state traversal and incementation of the program counter.
@@ -92,3 +101,8 @@ http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html
 \end{figure}
 
 As we can see from figure \ref{fig:fibsim}, r2 holds the number 21, which is the first fibonacci number after the number 16, which is stored in r3.
+
+\section{Programming the FPGA}
+We were unfortunately unable to upload the .bit file to the FPGA, and ended up having to abandon it in order to do improvements on the rest of the project instead.
+We are fairly certain that it should work, however, after countless hours fixing bugs found with the simulator.
+For more about our difficulties, see section TODO: insert ref to discussion.
