@@ -1,3 +1,7 @@
+\section{Instruction Set}
+
+While no more instructions than those required were implemented in the processor, it would be a simple matter to implement further instructions by adding more condition-blocks to the case statement of the decoder.
+
 \section{Stall state}
 
 It was suggested to use a stall state for both load and store instructions, but we found that stalls were unnecessary for store instructions, as storing data to the memory only takes one clock cycle, opposed to retrieving data and then writing to registries, which takes two.
