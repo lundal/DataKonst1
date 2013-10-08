@@ -61,7 +61,7 @@ The total percentage of used slices came in at 5\%.
 The execution of the first three instructions can be seen in figure \ref{fig:sim1}. As expected, these load word instructions makes use an extra stall cycle. The figure shows that data is loaded correctly from memory into the \emph{reg_write_data} signal, and that the register file is updated at the following clock cycle. Note that the register contents is too big to display in the figure, but the data is stored correctly. Since instruction 2 is indentical to instruction 1, nothing happens except for state traversal and incementation of the program counter.
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.3]{figures/sim1.png}
+    \includegraphics[scale=0.36]{figures/sim1.png}
     \caption{\label{fig:sim1}Simulation Part 1 - Instruction 0,1,2}
 \end{figure}
 
@@ -69,7 +69,7 @@ Next, the action starts in figure \ref{fig:sim2}. First up is the add instructio
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.3]{figures/sim2.png}
+    \includegraphics[scale=0.36]{figures/sim2.png}
     \caption{\label{fig:sim2}Simulation Part 2 - Instuction 3,4,5,7}
 \end{figure}
 
@@ -77,7 +77,7 @@ In figure \ref{fig:sim3}, it can be seen that register 3 is also stored to addre
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.3]{figures/sim3.png}
+    \includegraphics[scale=0.36]{figures/sim3.png}
     \caption{\label{fig:sim3}Simulation Part 3 - Instruction 8,9,10,11}
 \end{figure}
 
@@ -85,7 +85,7 @@ Things are finished off in figure \ref{fig:sim4} where register 3 is set to regi
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.3]{figures/sim4.png}
+    \includegraphics[scale=0.36]{figures/sim4.png}
     \caption{\label{fig:sim4}Simulation Part 4 - Instruction 12,13,14,11}
 \end{figure}
 
@@ -96,7 +96,7 @@ http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html
 \subsection{Self made test program}
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=1.0]{figures/fibtest.png}
+    \includegraphics[scale=0.95]{figures/fibtest.png}
     \caption{\label{fig:fibsim}Register values when program has found the appropriate fibonacci number. r1 is contained in the {\color{red} red box}, r2 in the {\color{green} green box}, r3 in the {\color{blue} blue box} and r4 in the {\color{magenta} purple box}.}
 \end{figure}
 
