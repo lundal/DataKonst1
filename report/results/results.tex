@@ -1,7 +1,9 @@
-\section{Test Program}
+\section{Test Programs}
+In addition to the supplied test bench and program, we made another test bench which can be found in \emph{tb_toplevelfib.vhd} for a program we wrote ourselves.
+This allowed us to test more of the functionality as well as checking whether we were able to produce a program which behaved correctly for our CPU.
 
-Following is the supplied test program decoded from hexadecimal to assembly:
-
+\subsection{Supplied test program}
+We were supplied with the following test program, translated from machine code to assembly:
 \begin{verbatim}
 00: lw r1, 1(r0)    -- Data = 2
 01: lw r1, 2(r0)    -- Data = 10
@@ -21,10 +23,33 @@ Following is the supplied test program decoded from hexadecimal to assembly:
 15: sw r3, 10(r0)
 \end{verbatim}
 
+\subsection{Self made test program}
+This test program is a simple program that should calculate the first fibonacci number larger than a given number.
+In order to function properly, the data memory has to contain the value 1 at the address 0x1, 2 at 0x2 and the limit at 0xf.
+When the number is found, it can be read at the address 0x10.
+
+Below is the source code for the test program:
+\begin{verbatim}
+00: LW r1,0x1(r0)
+01: LW r2,0x2(r0)
+02: LW r3,0xf(r0)
+
+LOOP:
+ADD r4,r1,r2
+ADD r1,r2,r0   ; Move
+ADD r2,r4,r0   ; Move
+SLT r4,r3,r2   ; $4 = $3 < $2
+BEQ r0,r4,LOOP ; If !($3 < $2), go to LOOP
+
+SW r3,0x10(r0) ; Store value at 0x10
+
+INFILOOP:
+J INFILOOP     ; Keep on spinning, a simple jump test
+\end{verbatim}
+
 \section{Simulation}
-
+\subsection{Supplied test program}
 The execution of the first three instructions can be seen in figure \ref{fig:sim1}. As expected, these load word instructions makes use an extra stall cycle. The figure shows that data is loaded correctly from memory into the \emph{reg_write_data} signal, and that the register file is updated at the following clock cycle. Note that the register contents is too big to display in the figure, but the data is stored correctly. Since instruction 2 is indentical to instruction 1, nothing happens except for state traversal and incementation of the program counter.
-
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.3]{figures/sim1.png}
@@ -57,3 +82,13 @@ Things are finished off in figure \ref{fig:sim4} where register 3 is set to regi
 
 TODO: Source
 http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html
+\clearpage
+
+\subsection{Self made test program}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale=1.0]{figures/fibtest.png}
+    \caption{\label{fig:fibsim}Register values when program has found the appropriate fibonacci number. r1 is contained in the {\color{red} red box}, r2 in the {\color{green} green box}, r3 in the {\color{blue} blue box} and r4 in the {\color{magenta} purple box}.}
+\end{figure}
+
+As we can see from figure \ref{fig:fibsim}, r2 holds the number 21, which is the first fibonacci number after the number 16, which is stored in r3.
