@@ -10,7 +10,7 @@ ADD $4,$1,$2
 ADD $1,$2,$0 ; Move $2 to $1
 ADD $2,$4,$0 ; Move $4 to $2
 SLT $4,$3,$2 ; $4 = $3 < $2
-BEQ $0,$4,0x4 ; If $3 > $2, go to 0x4
+BEQ $0,$4,-0x4 ; If $3 > $2, go to 0x4
 
 SW $3,0x10($0) ; Store value at 0x10
 J 0x

@@ -301,7 +301,7 @@ begin
 						alu_in.Op0	<=	'1';
 					when FUNC_SLT =>
 						alu_in.Op3	<=	'0';
-						alu_in.Op2	<=	'0';
+						alu_in.Op2	<=	'1';
 						alu_in.Op1	<=	'1';
 						alu_in.Op0	<=	'1';
 					when others =>
