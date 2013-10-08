@@ -29,10 +29,10 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
-ENTITY tb_toplevel IS
-END tb_toplevel;
+ENTITY tb_toplevelfib IS
+END tb_toplevelfib;
  
-ARCHITECTURE behavior OF tb_toplevel IS 
+ARCHITECTURE behavior OF tb_toplevelfib IS 
  
   -- Component Declaration for the Unit Under Test (UUT)
   COMPONENT toplevel
@@ -82,7 +82,7 @@ ARCHITECTURE behavior OF tb_toplevel IS
   -- This is written to memory initially
   constant data0 : std_logic_vector(0 to 31):= X"00000000";
   constant data1 : std_logic_vector(0 to 31):= X"00000001";
-  constant data2 : std_logic_vector(0 to 31):= X"00000010";
+  constant data2 : std_logic_vector(0 to 31):= X"00000002";
   constant data3 : std_logic_vector(0 to 31):= X"00000000";
   constant data4 : std_logic_vector(0 to 31):= X"00000000";
   constant data5 : std_logic_vector(0 to 31):= X"00000000";
@@ -94,8 +94,8 @@ ARCHITECTURE behavior OF tb_toplevel IS
   constant data11 : std_logic_vector(0 to 31):= X"00000000";
   constant data12 : std_logic_vector(0 to 31):= X"00000000";
   constant data13 : std_logic_vector(0 to 31):= X"00000000";
-l constant data14 : std_logic_vector(0 to 31):= X"00000000";
-  constant data15 : std_logic_vector(0 to 31):= X"01000000";
+  constant data14 : std_logic_vector(0 to 31):= X"00000000";
+  constant data15 : std_logic_vector(0 to 31):= X"00000010";
   constant data16 : std_logic_vector(0 to 31):= X"00000000";
   
   -- These are the instructions executed by the CPU (loaded to instruction-memory)
@@ -107,7 +107,7 @@ l constant data14 : std_logic_vector(0 to 31):= X"00000000";
   constant ins4  : std_logic_vector(0 to 31) := X"00400820";
   constant ins5  : std_logic_vector(0 to 31) := X"00801020";
   constant ins6  : std_logic_vector(0 to 31) := X"0062202a";
-  constant ins7  : std_logic_vector(0 to 31) := X"10040004";
+  constant ins7  : std_logic_vector(0 to 31) := X"1004fffc";
   constant ins8  : std_logic_vector(0 to 31) := X"ac030010";
   constant ins9  : std_logic_vector(0 to 31) := X"0800000a";
    
