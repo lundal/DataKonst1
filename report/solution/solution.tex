@@ -30,7 +30,7 @@ The CPU architecture closely resembles the suggested one.
 The main difference is that instead of feeding the program counter register into the instruction memory, %TODO: reference, page 115 compendium
 the next calculated program counter is fed into it, and then a flip-flop lets the instruction through at the correct time.
 
-\subsection{The Control Unit}
+\section{The Control Unit}
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.3]{figures/controlunit.png}
@@ -41,21 +41,21 @@ The control unit (CU) was implemented as a state machine, a decoder and a splitt
 On a rising clock edge, it will update the state depending on the current
 state. The states, as shown in \ref{fig:stateMachine}, are as follows:
 
-\subsubsection{Fetch}
+\subsection{Fetch}
 
 The instruction is fetched from the instruction memory
 and the program counter is updated before the state is set to execute.
 
-\subsubsection{Execute}
+\subsection{Execute}
 
 The CU lets the ALU and other logic do its things before setting the state to that
 decided by the decoder, which is normally fetch, but stall in case of load instructions.
 
-\subsubsection{Stall}
+\subsection{Stall}
 
 The CU gives the memory an extra cycle to write the data back to the registers, before setting the state to fetch.
 
-\subsubsection{Other}
+\subsection{Other}
 
 If the CU finds itself in some other state, something weird has gone wrong.
 This is only a sanity check, and should never happen.
@@ -66,7 +66,7 @@ This is only a sanity check, and should never happen.
     \caption{\label{fig:stateMachine}The state machine}
 \end{figure}
 
-\subsection{Splitter And Decoder}
+\section{Splitter And Decoder}
 
 The splitter simply splits the signal from the instruction memory into
 its induvidual components like opcode, rs, rt, rd and so forth.
