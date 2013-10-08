@@ -106,3 +106,8 @@ As we can see from figure \ref{fig:fibsim}, r2 holds the number 21, which is the
 We were unfortunately unable to upload the .bit file to the FPGA, and ended up having to abandon it in order to do improvements on the rest of the project instead.
 We are fairly certain that it should work, however, after countless hours fixing bugs found with the simulator.
 For more about our difficulties, see section \ref{subsec:uploadproblems}.
+
+\subsection{Testing on the FPGA}
+We did not get to do this, but testing the program on the FPGA would be very similar to the simulated tests, although a bit harder to debug.
+The appropriate instruction and data memory would be loaded into the CPU while it was halted through host.py, and the CPU would then be resumed.
+The data memory could then be fetched and inspected in order to determine whether the programs behaved as expected on the physical hardware.
