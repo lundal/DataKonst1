@@ -245,7 +245,7 @@ begin
 		target	<= instruction(25 downto 0);
 	end process;
 	
-	DECODER : process (opcode, func)
+	DECODER : process (opcode, func, state)
 	begin
 		-- Reset Control signals
 		alu_src		<= '0';
@@ -399,6 +399,11 @@ begin
 			when others =>
 				null;
 		end case;
+		
+		-- Fix for R-instructions that reads and writes the same register
+		if state = STATE_FETCH then
+			reg_write <= '0';
+		end if;
 	end process;
 	
 	PC_CHOOSER : process(pc_1, pc_jump, pc_branch, jump, branch, alu_flags)
