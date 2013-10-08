@@ -8,7 +8,7 @@ The processor implements all required instructions, as shown below:
             \item ADD - Addition
             \item SUB - Subtraction
             \item SLT - Test if the first source register is less than second
-            \item AND - Bitwise and
+            \item AND - Bit wise and
             \item OR  - Logical or
         \end{itemize}
     \item BEQ - branch if registers are equal
@@ -71,7 +71,7 @@ This is only a sanity check, and should never happen.
 \section{Splitter And Decoder}
 
 The splitter simply splits the signal from the instruction memory into its
-induvidual components like opcode, rs, rt, rd and so forth.  The decoder
+individual components like opcode, rs, rt, rd and so forth.  The decoder
 analyzes the opcode and function signals and enables the correct control signals
 and decides the next state.  It is composed of a switch statement with one
 condition-block for each opcode.  The R-format has an additional switch

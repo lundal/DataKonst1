@@ -24,7 +24,7 @@ We were supplied with the following test program, translated from machine code t
 \end{verbatim}
 
 \subsection{Self made test program}
-This test program is a simple program that should calculate the first fibonacci number larger than a given number.
+This test program is a simple program that should calculate the first Fibonacci number larger than a given number.
 In order to function properly, the data memory has to contain the value 1 at the address 0x1, 2 at 0x2 and the limit at 0xf.
 When the number is found, it can be read at the address 0x10.
 
@@ -33,32 +33,32 @@ Below is the source code for the test program:
 00: LW r1,0x1(r0)
 01: LW r2,0x2(r0)
 02: LW r3,0xf(r0)
-
-LOOP:
-ADD r4,r1,r2
-ADD r1,r2,r0   ; Move
-ADD r2,r4,r0   ; Move
-SLT r4,r3,r2   ; $4 = $3 < $2
-BEQ r0,r4,LOOP ; If !($3 < $2), go to LOOP
-
-SW r3,0x10(r0) ; Store value at 0x10
-
-INFILOOP:
-J INFILOOP     ; Keep on spinning, a simple jump test
+03:
+04: LOOP:
+05: ADD r4,r1,r2
+06: ADD r1,r2,r0   ; Move
+07: ADD r2,r4,r0   ; Move
+08: SLT r4,r3,r2   ; $4 = $3 < $2
+09: BEQ r0,r4,LOOP ; If !($3 < $2), go to LOOP
+10:
+11: SW r3,0x10(r0) ; Store value at 0x10
+12:
+13: INFILOOP:
+14: J INFILOOP     ; Keep on spinning, a simple jump test
 \end{verbatim}
 
 \section{Synthesis}
 While synthesizing the processor, we managed to reach a frequency of 39.134MHz.
-It is very likely that a higher frequency can be achieved, but we are satisfied with the frequency achieved, as it seems like we are in the right order of magnitude when it comes to what is expected.
+It is very likely that a higher frequency can be achieved, but we are satisfied with the frequency achieved, as it seems like we are in the same order of magnitude as what one can theoretically expect with the available time and resources we had.
 
 \subsection{Resource utilization}
-We did not expect to hit any limits when it comes to resources as the FPGA is quite large and the CPU rather simple, however it always pays off to keep a watch of the resource utilization nevertheless.
+We did not expect to hit any resource limits as the FPGA is quite large and the CPU rather simple, however it always pays off to keep a watch of the resource utilization nevertheless.
 Slice register and slice LUT usage was quite low at 1\% and 3\% respectively.
 The total percentage of used slices came in at 5\%.
 
 \section{Simulation}
 \subsection{Supplied test program}
-The execution of the first three instructions can be seen in figure \ref{fig:sim1}. As expected, these load word instructions makes use an extra stall cycle. The figure shows that data is loaded correctly from memory into the \emph{reg_write_data} signal, and that the register file is updated at the following clock cycle. Note that the register contents is too big to display in the figure, but the data is stored correctly. Since instruction 2 is indentical to instruction 1, nothing happens except for state traversal and incementation of the program counter.
+The execution of the first three instructions can be seen in figure \ref{fig:sim1}. As expected, these load word instructions makes use an extra stall cycle. The figure shows that data is loaded correctly from memory into the \emph{reg_write_data} signal, and that the register file is updated at the following clock cycle. Note that the register contents is too big to display in the figure, but the data is stored correctly. Since instruction 2 is identical to instruction 1, nothing happens except for state traversal and incrementation of the program counter.
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.36]{figures/sim1.png}
@@ -70,7 +70,7 @@ Next, the action starts in figure \ref{fig:sim2}. First up is the add instructio
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.36]{figures/sim2.png}
-    \caption{\label{fig:sim2}Simulation Part 2 - Instuction 3,4,5,7}
+    \caption{\label{fig:sim2}Simulation Part 2 - Instruction 3,4,5,7}
 \end{figure}
 
 In figure \ref{fig:sim3}, it can be seen that register 3 is also stored to address 6 and 7, before the load upper immediate function replaces the contents of register 3 by $6 << 16$, as seen in the signal \emph{reg_write_data}. Finally the result is stored to memory address 8.
@@ -97,10 +97,10 @@ http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.95]{figures/fibtest.png}
-    \caption{\label{fig:fibsim}Register values when program has found the appropriate fibonacci number. r1 is contained in the {\color{red} red box}, r2 in the {\color{green} green box}, r3 in the {\color{blue} blue box} and r4 in the {\color{magenta} purple box}.}
+    \caption{\label{fig:fibsim}Register values when program has found the appropriate Fibonacci number. r1 is contained in the {\color{red} red box}, r2 in the {\color{green} green box}, r3 in the {\color{blue} blue box} and r4 in the {\color{magenta} purple box}.}
 \end{figure}
 
-As we can see from figure \ref{fig:fibsim}, r2 holds the number 21, which is the first fibonacci number after the number 16, which is stored in r3.
+As we can see from figure \ref{fig:fibsim}, r2 holds the number 21, which is the first Fibonacci number after the number 16, which is stored in r3.
 
 \section{Programming the FPGA}
 We were unfortunately unable to upload the .bit file to the FPGA, and ended up having to abandon it in order to do improvements on the rest of the project instead.
