@@ -43,3 +43,8 @@ be execute, where the CU lets the CPU do its thing before setting the state to
 the next, or finally stall, where only the next instruction is fetched. If none
 of these states are the current state, something weird has gone wrong, and the
 CU stalls.
+
+The splitter simply splits the instruction into various signals from the IMEM
+bus. The decoder is the process that prepares for the executions of the
+instructions. It has a switch statement distinguishing between the various
+opcodes, and setting the correct control signals depending on the code. 
