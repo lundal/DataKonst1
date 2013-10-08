@@ -1,18 +1,87 @@
+\section{Processor design and VHDL}
 In processor design, thousands of transistors have to be carefully arranged.
-Every single connection can make or break the design, thus manual placement and wiring is obviously no option.
-However through the use of Hardware Description Languages (HDL), designers can specify the semantics of their circuits through a programming-like syntax,
-and allow a software tool to synthesize the HDL code into a low-level schematic of the circuit, greatly simplifying the process and improving efficiency.
+Every single connection can make or break the design, thus manual placement and
+wiring is obviously no option.  However through the use of Hardware Description
+Languages (HDL), designers can specify the semantics of their circuits through a
+programming-like syntax, and allow a software tool to synthesize the HDL code
+into a low-level schematic of the circuit, greatly simplifying the process and
+improving efficiency.
 
 
-VHDL is one such language.
-It was originally developed at the hands of the U.S Department Of Defence to document the behavior of Integrated Circuits (ICs), but was later expanded to allow logic simulation and synthesis.
-[TODO]
+VHDL is one such language.  It was originally developed at the hands of the U.S
+Department Of Defence to document the behavior of Integrated Circuits (ICs), but
+was later expanded to allow logic simulation and synthesis. The language is
+documented in the IEEE Standard 1076, and the last revision was added in
+2008.[1]
+
+VHDL is used not only to synthesize hardware design, but as it's a complete
+programming language, it is used for simulation of test benches as well. When
+writing code that is to be synthesized this must be acounted for, as normal
+programming paradigms will make the code unsynthesizable.
 
 
-Field-Programmable Gate Arrays (FPGAs) are ICs where the logic design can be reconfigured after manufacturing.
-They mainly consists of Look-Up tables (LUTs), which can be implement any logical expressions, and configurable wiring.
-Many also contains Block RAM (BRAM) and hardware accelerators in the form of adder/subtractors, multipliers and more.
-Although FPGAs are not comparable to Application-Specific ICs (ASICs) in raw performance, they allow for quick and easy testing and remedation of errors, in addition to being cheaper by far due to mass-production.
+\section{FPGA}
+Field-Programmable Gate Arrays (FPGAs) are ICs where the logic design can be
+reconfigured after manufacturing.  They mainly consists of Look-Up tables
+(LUTs), which can be implement any logical expressions, and configurable wiring.
+Many also contains Block RAM (BRAM) and hardware accelerators in the form of
+adder/subtractors, multipliers and more.  Although FPGAs are not comparable to
+Application-Specific ICs (ASICs) in raw performance, they allow for quick and
+easy testing and remedation of errors, in addition to being cheaper by far due
+to mass-production.
+
+
+\section{MIPS}
+MIPS (acronym for Multiprocessor without Interlocked Pipeline Stage), is a RISC
+architecture. The instructions are all coded as 32 bit words, with a small
+number of different formats, R, I and J (for register, immediate and jump). 
+
+\begin{figure}[ht]
+    \centering
+    \begin{tabular}{ | c | c | c | c | c | c | }
+        \hline
+        op & rs & rt & rd & shamt & func \\
+        \hline
+    \end{tabular}
+    \caption{\label{fig:rInstruction}Instruction format of R-instruction}
+\end{figure}
+
+The R-instruction takes three registers, and is used like the following code
+snippet:
+
+\begin{verbatim}
+    rs = rt + rd
+\end{verbatim}
+
+The plus is just for reading convience, and can be exchanged with a different
+opcode and/or func value. The shamt field tells how many positions to shift,
+when used with a shift function.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tabular}{ | c | c | c |  c  | }
+        \hline
+        op & rs & rt & constant or address   \\
+        \hline
+    \end{tabular}
+    \caption{\label{fig:iInstruction}Instruction format of I-instruction}
+\end{figure}
+
+The immediate instruction is used for immediate aritmethic and load/store
+instructions, as well as branching. 
+
+
+\begin{figure}[ht]
+    \centering
+    \begin{tabular}{ | c | c c c c c c c c c | }
+        \hline
+        op & & & & & address & & & &  \\
+        \hline
+    \end{tabular}
+    \caption{\label{fig:jInstruction}Instruction format of J-instruction}
+\end{figure}
+
+The J-instruction is used for unconditional jumps.
 
 
 Sources:
@@ -22,3 +91,8 @@ http://en.wikipedia.org/wiki/VHDL
 http://en.wikipedia.org/wiki/Field-programmable_gate_array
 
 http://www.bitweenie.com/listings/verilog-vs-vhdl/ [?]
+
+[1] IEEE Standard 1076-2008
+%(http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4772740)
+
+MIPS-lecture (\#3)
