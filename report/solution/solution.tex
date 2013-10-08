@@ -1,5 +1,4 @@
 \section{Instruction set}
-The goal of this assignment was to implement a simple multi-cycle MIPS processor in VHDL.
 There was a minimal instruction set required to complete this assignment which was implemented in \emph{processor.vhd}:
 \begin{itemize}
     \item Several ALU instructions (all working on two registers and storing the result in a third):
@@ -21,15 +20,40 @@ There was a minimal instruction set required to complete this assignment which w
 \begin{figure}[ht]
     \centering
     \includegraphics[scale=0.3]{figures/cpu.png}
-    \caption{\label{fig:cpuArchitecture}The implemented CPU architecture. Note that the only difference from the architecture suggested in the lecture slides is that the setting of the program counter is moved slightly.} %TODO: reference, page 115 compendium
+    \caption{\label{fig:cpuArchitecture}The implemented CPU architecture.} 
 \end{figure}
 
 The suggested CPU architecture remained mostly unchanged.
-The main difference is that instead of retrieving the instruction address from the program counter, it is retrieved directly from the same bus that is used to set the program counter.
+The main difference is that instead of retrieving the instruction address from the program counter, %TODO: reference, page 115 compendium
+it is retrieved directly from the same bus that is used to set the program
+counter. This is because it shouldn't take another clock cycle to start the
+execution.
 
 \subsection{The control unit}
 \begin{figure}[ht]
     \centering
-    \includegraphics[scale=1.0]{figures/controlunit.png}
+    \includegraphics[scale=0.3]{figures/controlunit.png}
     \caption{\label{fig:controlUnit}The control unit.}
 \end{figure}
+The control unit was implemented as a state machine, a decoder and a splitter.
+On a rising clock edge, it will update it's state depending on its current
+state. These can be fetch, where the instruction is fetched from the data bus
+and the program counter is updated before the state is set to execute, or it can
+be execute, where the CU lets the CPU do its thing before setting the state to
+the next, or finally stall, where only the next instruction is fetched.
+Figure \ref{fig:stateMachine} shows how the machine can move between the states. If none
+of these states are the current state, something weird has gone wrong, and the
+CU stalls. This is only a sanity check, and should not happen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.5]{figures/controlunitstatemachine.png}
+    \caption{\label{fig:stateMachine}The state machine}
+\end{figure}
+
+
+
+The splitter simply splits the instruction into various signals from the IMEM
+bus. The decoder is the process that prepares for the executions of the
+instructions. It has a switch statement distinguishing between the various
+opcodes, and setting the correct control signals depending on the code. 
